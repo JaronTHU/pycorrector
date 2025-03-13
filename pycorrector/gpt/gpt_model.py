@@ -125,7 +125,7 @@ class GptModel:
             self.args.fp16 = False
         if self.args.fp16:
             self.args.bf16 = False
-        self.torch_dtype = torch.bfloat16 if self.args.bf16 else (torch.float16 if self.args.fp16 else torch.float32)
+        self.torch_dtype = torch.bfloat16 #if self.args.bf16 else (torch.float16 if self.args.fp16 else torch.float32)
         self.config = config_class.from_pretrained(
             model_name,
             trust_remote_code=self.args.trust_remote_code,
@@ -147,6 +147,7 @@ class GptModel:
                 bnb_4bit_quant_type="nf4",
                 bnb_4bit_compute_dtype=self.torch_dtype,
             ) if self.args.qlora else None,
+            attn_implementation='flash_attention_2'
         )
 
         self.tokenizer_class = tokenizer_class
